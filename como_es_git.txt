@@ -1,0 +1,500 @@
+
+el secreto para conseguir es conococer el modelo conceptual detras de git , no hay que pensar con los comando ,hay que 
+saber como funciona git y despues la complejidad del comienzo empezara a parecer simple,
+
+GIT ES UNA CEBOLLA
+
+Git esta por capas , hasta llegar al nucleo , asi es como git se convierte en un sistema
+de control de versiones .
+que sucede si te olvidas de las ramas ,la historia y similares
+Git es rastreador de contenido , hay que enfocarnos en el nucleo de la cebolla ,la idea 
+basica detras de git 
+
+CONOCE A SHA1
+
+Cual quier secuencia de bytes puede ser un valor , se puede dar un valor a git y calculara la 
+clave para ellos un has , git calcula los hashes con algoritmos SHA1, cada pieza de contenido
+tiene su propio SHA1 Ejemplo 
+
+"Apple Pie" es de dicer este hash es : 23991897e13e......
+los SHA1 son 20 bytes en formato exadecimal por lo que son una secuencia de 40 digitos
+exadecimales. 
+ 
+ este sera la clave de git para almacernar este contenido en el mapa.
+ tambie podemos calcular el SHA1 en la linea del comando 
+
+ -git hash-object "Apple  pie"
+ -echo "Apple Pie"
+ el objeto hash no es facil de usar 
+
+ Podemos usar el comando echo para generar este contenido y luego conalizar el resultado en 
+ un objeto hash como el siguiente:
+
+ -echo "Apple Pie" | git hash-object --stdin 
+
+ tambien se necesita decirle a hash-object que obten su contenido desde stdin
+
+ imprime el hash para esta piesa del contenido y nos muestra el resultado :
+
+ 23991897e13e47ed0adb91a0082c31c82fe0cbe5 
+
+ Cada objeto en un repositorio Git tiene un SHA1 que identificara el archivo, asi como los commits
+ y sucesivamente .
+
+ contantos SHA1 al rededor uno se preguntaria que pasa si chocan ? 
+ se tiene la provabilida asi como ganar la loteria , es poco probable que ocurra 
+
+ ALMACENAMIENTO DE COSAS 
+
+ git es persistente
+ 
+ ls -a : nosmuestra directorios ocultos 
+
+ cuando uno usa el comando "git init" automaticamente crea un repositorio .git esta carpeta
+ se encuentra oculta , cuando abrimos la carpeta podremos denotar que se encuentran archivos
+ y carpetas , entre esas carpetas "directorios" se encuentra una llamada objects, y almacernar
+ bases de datos , de objetos .
+
+ dentro del directorio se van a encontrar varios subdirectorios aqui, las primeras 2 letras 
+ son los 2 digitos por los que empieza todo lo que guardamos, git usa este esquema para guardar
+ en varios directorios, es un truco para evitar acumular todo el contenido
+
+ git cat-file  "t" oh "-p" seguido del codigo: este comando muestra como git guarda contenido 
+
+PRIMER COMMIT 
+
+Git rastrea archivos y directorios, es un rastreador
+
+cuando usamos el comando " git status" nos muestra los archivos que no tienen seguimiento
+git no sabe todavia que hacer con ellos.
+
+para enviar un archivo hay que enviarlo a la zona de espera , es como una plataforma de lanzamiento
+lo que sea que este en el area de preparacion entrara en el proximo commit .
+
+para agregar estos archivos al area de preparacion lo hacemos con el comando "add ." ahora los 
+archivos son verdes significan que han sido escenificados. 
+
+despues con el comando "commit -m" damos el mensaje de confirmacion , y ahora el area de 
+preparacion esta limpia .
+
+-git log: nos muestra las listas de confirmaciones existentes , el SHA1 empieza con los 
+primeros digitos .
+
+Ahora miraremos el directorio de .git y subdirectorio object , podremos observar el commit 
+nos va a mostrar tambien un arbol que es un directorio almacenado en git .
+
+la confirmacion apunta a la raiz del proyecto , eso es lo que este arbol la raiz del proyecto 
+
+CONTROL DE VERSIONES SIMPLIFICADO 
+
+Entenderemos que el controlde versiones es simple , al momento de realizar un cambio git lo
+almacena en otra rama 
+
+- git count-objects : podremos mirar cuantos archivos estan y su tamaño
+
+git almacena un nuevo blob cada vez que cambie un archivo ,que pasa si tengo un archivo enorme
+y cambio una linea , git almacenara un blob completamente nuevo y duplicara el resto del archivo 
+git tambien crea una nueva capa de optimizacion para ahorrar mas espacio ,mientras se sigue 
+trabajando y agregando contenido al repositorio.
+
+git puede incluso comprimir varios objetos en el mismo archivo fisico y empaquetar directorios 
+en la base de datos , estos son detalles de implementacion .
+
+para entender el modelo de git es necesario pensar en cada confirmacion "blob" o "arbol" como 
+solo archivos que son hash y almacenados en la base de datos . y luego tiene otra capa de 
+optimizaciones que es util si solo se esta trabajando con el codigo fuente de git  
+git hace que todo sea eficiente.
+
+UNA COSA MAS ETIQUETAS ANOTADAS 
+
+Una etiqueta es para el estado actual del proyecto , hay dos tipos de etiquetas en git 
+etiquetas regulares y etiquetas anotadas
+
+etiquetas anotadas: son las que vienen con un mensaje , para crear una etiqueta anotada se hace de
+la siguiente manera.
+
+git tag -a nombre etiqueta -m "mensaje "
+
+es similar a crear una confirmacion , derecho una tiqueta anotada tambien es un objeto en la 
+base de datos de objetos de git como commit, contiene el metodo como elmensaje de la etiqueta
+una etiqueta esta pegada a un objeto .
+
+en la base de objetos de git , tiene
+ 
+ -blobs
+ -arboles :el equivalente de directorios 
+ -commit  :
+ -annotated Tags:confirma y anota etiquetas
+
+ no hay nada mas en la base de datos, solo estos cuatro tipos de objetos 
+
+ QUE ES REALMENTEGIT 
+
+ Miremos todo el modelo desde un punto de vista abstracto ,
+ tenemos una estructura en las que algunas cosas contienen datos blobs 
+ luego otras cosas contienen arboles y otros arboles para que toda
+ la estructura sea recursiva , los arboles no estan en los objetos en si.
+ encambio se almacenan en el arbol contenedor ,entonces  puedes tener el mismo
+ objeto entre diferentes arboles con distintos nombres, es como accesos directos .
+ git es un sistema de archivo de alto nivel construido sobre su sistema de archivo nativo 
+
+ COMO FUNCIONA GIT MODULO 2
+
+ Podremos ahora pasar a la siguiente capa que es git onion y observar las caracteristicas
+ que convierten a git en una revision completa , sistema de control caracteristicas ramas y
+ fusiones .
+
+ QUE SON REALMENTE LAS RAMAS 
+
+ tan pronto se tiene un proyecto de git , tambien tienes una sucursal ,
+ 
+ git crea esta rama para nosotros donde hacemos nuestro primer commit , viendo la lista 
+ de ramas en el proyecto con git branch sin ningun argumento nos va a mostrar master 
+
+ estamos acostumbrados a mirar dentro del directorio .git 
+
+ que es una rama? 
+ git normalmente coloca ramas en el directorio llamado "refs" y un subdirectorio llamado "heads"
+ dentro del cual encontramos un archivo llamado master el cual podemos abrir de la siguiente 
+ manera 
+ -ls -a 
+ -cat .git/refs/heads/ contiene una llinea SHA1
+ MASTER  es simplemente una referencia .
+ 
+ es por eso que el directorio contiene ramas sellaman   referencias .
+
+ cuando creamos una nueva rama 
+
+ git branch nombre de la rama 
+
+ podemos observar que dentro de la carpeta heads se encontrara el nuevo nombre de la rama
+ y al abrirlo se podra ver que se encontrara el mismo SHA1 de la rama master 
+
+ LA MECANICA DE LA RAMA ACTUAL 
+
+ HEAD : es una refrencia a una rama es como un puntero
+
+ cuando se agrega un nuevo commit , git crea algunos objetos nuevos en la base de datos 
+ de objetos para esta confirmacion y esta confirmacion se crea como padre.
+
+ luego git mira dentro del archivo HEAD para encontrar cual es la rama actual , y movio 
+ esa rama para apuntar a la nueva confirmacion .
+
+ cuando usamos el comando checkout el HEAD se mueve hacia la rama que le digamos
+ y si nosmovemos hacia esa rama el contenido que teniamos en rama master pasa a la siguiente
+ rama .
+
+ checkout : significa mover HEAD y actualizar el area de trabajo 
+
+ al momento de estar en la otra rama podremos agregar mas informacion 
+ cuando agregamos y hacemos un commit git mueve la rama actual para apuntar a la nueva 
+ confirmacion "commit", las ramas siguen siendo referencias a confirmaciones eso es todo lo que 
+ hay en las sucursales .
+
+ VAMOS A FUCIONARNOS 
+
+ al mover HEAD siempre se movera al utimo "Commit" donde se encuentre la rama , aca es donde 
+ miramos las versiones y podemos unir los cambios entre ramas .
+
+ es normal que se nos presenten conflictos al momento de unir ramas , y debemos solucionar esos 
+ conflictos , para ello se debe entrar en el archivo y mirar que pudo suceder . despues de
+ solucionar el conflicto debemos agregarlo y comitiarlo . 
+
+ al fucionar veremos que tienen dos padres eso es lo que la convierte en una fusion , moviendo 
+ HEAD con rama MASTER para crear unnuevo commit , asi es como funciona la funcion 
+
+ VIAJE EN EL TIEMPO PARA DESARROLLADORES
+
+ Sabemos que los objetos de la base de datos son confirmaciones , arboles y blobs y tambien
+ etifquetas anotadas, todos los objetos estan organizados en un grafico .
+
+ todas estas referencias se parecen pero se utilizan de dos formas diferentes, 
+ las referencias entre confirmaciones se utilizan para rastrear el historial .
+ todas las demas referencias se utilizan para rastrear contenido.
+
+ git reutiliza el contacto para poder tener objetos, que son accesibles desde mas de una confirmacion
+ a git no le importa la historia , no mira la forma en que los commits se conectan entre si ni los blobs
+ debemos enfocarnos en como se conectan las confirmaciones entre si "commit"
+git se preocupa por los objetos en la base de datos , no por sus directorios de trabajo .
+los objetos de la base de datos son inmutables y persistentes, mientras que los archivos en el 
+directorio de trabajo son tan transitorios como sean posibles .
+
+antes de sobreescribir un archivo y hacer checkout git nos dira que se debe confirmar 
+
+FUCIONAR SIN FUCIONAR 
+
+Anteriormente fucionamos una rama dentro de master,pero esta vez sera master dentro de otra 
+rama, los commit se vuelven los padres , cuando se presenta un conflicto y se soluciona 
+almmento de fucionar las ramas no debe volver a suceder , ya que anteriormente se soluciono 
+ese conflicto.
+
+git le gusta ahorrar , y como ya tenemos un commit unido entre master y la otra rama ,
+lo que hace git es mover la otra rama a master , esto se llama avance rapido , esto es 
+para ahorrar objetos en el objeto .
+
+PERDER HEAD 
+
+Hay una caracteristica importante , HEAD es una referencia a una rama , que a su vez es una referencia 
+a un "commit"
+
+se puede consultar un commit en lugar de una rama 
+- git checkout -b  esta situacion se llama HEAD desprendida , lo que hace es que al momento 
+de crear un nuevo "commit " lo crea encima de ese commit , no de la rama,volvemos 
+nuevamente a master , pero la pregunta es que paso con estos commits que se crearon , quedaron 
+en el basio pero estaran en objetos , estan aislado por lo que no se encuentan en una rama .
+
+si se tiene alguna experiencia orientada a objetos,entonces se sabe que le ocurre a un objeto 
+cuando no puede ser alcanzado por alguna referencia , se recoge la basura , en algun momento 
+el sistema deside que se esta desperdiciando memoria y borra el objeto, recuperando la memoria
+
+"cada objeto es solo un archivo en la base de datos de objetos "
+
+si queremos salvarlos debemos actuar , creando una nueva rama 
+
+REBASANDO MODELOS SIMPLES
+
+Veremos un par de caracteristicas que son muy particulares , las ramas emergentes son caracteristicas
+para cualfquier control de versiones 
+
+COMO SE VE UN REBASE 
+
+al separar la rama master git busca el primer commit que se une con la otra rama , esto ya esta compartido entre las dos ramas
+ahora, git separa la otra rama de master y lo mueve encima de master asi se cambia la base de la rama , por eso se llama rebase
+y se hace de la siguiente manera;
+
+-git rebase master
+
+ahora la otra rama contiene toda la informacion de la rama master , tambien puede funcionar de la otra manera basicamente
+esto seria como una fusion entre ramas , lo que hace es que se reorganizan las ramas y esto hace que se vea una sola rama 
+
+UNA ILUSION DE MOVIMIENTO 
+
+Cuando se cambia de base , git separa la rama actual de su base y la mueve a la parte superior , pero este proceso no puede
+suceder asi , no se puede separar un "commit" de otro "commit" y moverlo a otra parte porque las confirmaciones son objetos
+de bases de datos y las bases de datos son inmutables, si cambias algo en un commit optienes una compuerta diferente un
+SHA1 diferente ,lo que significa un commit diferente , git hace copias de confirmaciones , crea nuevso commits con la mayoria
+de los mismos datos y por ultimo git mueve la rama rediseñada a nuevas confirmaciones ,dejando atras todas las confirmaciones
+ya que la rebazacion es una .
+
+SACANDO LA BASURA 
+
+Git se toma un tiempo para mirar los objetos en la base de datos , eliminado objetos que no tengan 
+una rama , en este caso los antigus commits que se crearon ya estan copiados y puestos en otra rama.
+un valor que no se puede alcanzar   a travez de cualqueir referencia , con un objeto que no se puede 
+alcanzar en una variable es eliminado por un recolector de basura .
+
+LAS COMPRENSIONES DE LAS FUSIONES 
+
+no preguntamos porque existen rebases , pero al momento de una fusion se ve que lo unico 
+que pasa es que se unen las ramas , per la fusion se vuelve un poco menos simple cuando es un proyecto
+grande , se puede observar que va haber bastantes ramificaciones .
+
+LA COMPRENSION DE LAS REBASES 
+
+Una historia rebasada se ve simple y ordenada , las rebasacion crea nuevas confirmaciones y deja atras 
+otras confirmaciones. muchas veces pensamos en el resultado final y no en la historia 
+de las ramificaciones , 
+
+"en caso de duda simplemente FUSIONAR"
+
+Usar rebase es una herramienta muy util, pero se debe utiliazar si se sabe lo que se esta haciendo 
+
+ETIQUETAS EN BREVE 
+
+Las etiquetas son muy utiles 
+git tag 
+
+se hablo que hay dos tipos de etiquetas 
+
+podemos coger un commit y escribir este commit con una etiqueta .
+crearemos una etiqueta anotada .
+la podemos utilizar para nuestro propio uso sin tanta informacion entonces una etiqueta ligera
+seria suficiente solo quitamos -a para que sea ligera y no anotada 
+git tag nombre de la etiquete 
+
+lo que hace una etiqueta es marcar sobre un commit , y esa etiqueta tendra el contenido de ese 
+commit por lo que contiene el SHA1 de la confirmacion .
+
+una etiqueta anotada es similar pero contiene el SHA1 de un objeto de etiqueta en la base de datos
+y contiene toda la informacion adicional .
+
+la diferencia de una etiqueta a una rama es que las etiquetas no se mueven , las ramas si 
+
+CONTROL DE VERSIONES DISTRIBUIDAS 
+
+Como compartir un producto en varias computadoras , lo podemos hacer por medio de github
+podmeos clonar un repositorio desde github con el comando 
+git clone "link" de lo que vamos a copiar y optendremos el directorio , todos los archivos 
+estaran aqui, pero no solo se obtuvieron los archivos tambien obtenemos el directorio .git 
+y todos los archivos que contiene ese directorio .
+
+estamos simplificando no se copia literlmente todo y cada uno de los archivos , por ejemplo en 
+versiones recientes de git el git clone solo copia la rama master , si queremos trabajar co las
+otras sucursales dentro del directorio , debo dar comando especificos para hacerlo , lo importante 
+es que git copio sobre los objetos en la base de datos objetos .
+
+git verifico la rama maestra para verificar estos archivos en el area de trabajo , siempre
+ se puede construir el area de trabajo apartir del directorio .git y como contiene todo el 
+ repositorio, ahora tenemos una copia del proyecto y su historia en esta computadora , ahora 
+ que tenemos los clones uno en github y otro en la computadora ambos clones son igualmente 
+ buenos , podemos tener tantos clones querramos , sincronizados entre todos 
+ donde se tendra en cuenta que el repositorio que se tiene en github es el de referencia
+
+ LOCAL Y REMOTO 
+
+ ahora que clonamos el repositorio podremos encontrar informacion util aqui , ya que puede 
+ recordar otras copias del mismo repositorio cada una de las copias se llama un control REMOTO
+ y se puede definir tantos controles remotos como se deseen, pero al clonar elproyecto .Git define 
+ inmediatamente un control remoto predeterminado y lo llamada con un nombre de convencion "origin" el cual 
+ apunta a una url donde clonamos el proyecto , despues tenemos la rama master que es nuestro control remoto.
+
+ git necesita conocer el estado de origen actual, que sucursal estan ahi, nos mostrara las sucursales locales, solo 
+ nos mostrara master , pero al enumerar las ramas con --all ejemplo:
+
+ -git branch --all: veremos todas las referencias incluidas del control remoto la rama remota y la posicion actual
+ git rastrea las sucursales remotas exactamente igual que rastrea las sucursales locales , escribiendo esas sucursales 
+ como referencias en la carpera "refs " si miramos dentro de esa carpeta encontraremos , sub carpetas y entre ellas 
+ remotes, origins: que contiene referencias a las ramas etiquetas y el punto de origen del encabezado actual .
+
+ git actualiza esta informacion cuando nos conectamos a un control remoto , en este caso solo podremos ver los controles 
+ remotos HEAD nos las ramas, es eso por una optimizacion debajo de nivel de git ,para evitar mantener un archivo pequeño 
+ para cada rama ,git aveces compacta algunos de ellos en unos solo archivo llamado packed-refs, no hay un comando simple 
+ para descomprimir estos archivos , por lo que tendremos que confiar en que las ramas que no estan en el directorio de ref
+ deben estar en este archivo.
+
+ Esto puede suceder tanto para sucursales locales como remotas , pero no ambos casos ya sea que las sucursales aun sean archivos 
+ individuales o esten empaquetadas juntas en referencias enpaquetadas , concetual mente siendo lo mismo 
+ todas las sucursales locales y remotas siguen siendo referencia a un compromiso y git realiza un seguimiento de todo eso 
+ ya que no podemos mirar los archivos porque han sido empaquetados podremos usar elsiguiente comando 
+
+ -git show-ref master :para ver que commits estan apuntando y muestra las ramas que estan a su nombre , lo que sisgnifica
+ la rama principal local y la rama principal remota .
+
+ en resumen una sucursal local en git es solo una referencia a un commit
+ una rama remota es exactamente lo mismo cada vez que se sincroniza con un control remoto , git actualiza 
+ las sucursales remotas .
+
+ LA ALEGRIA DE EMPUJAR    
+
+cada objeto en git es es una secuencia de bytes identificados por un SHA1 cada SHA1 es unico ,
+cuando clonamos y copiamos los objetos de un repositorio a otro por ejemplo un nuevo commit, blob, y arboles
+asociados la sincronizacion consiste en optener los mismos objetos en todos los clones , pero ahora 
+es mas facil de sincronizar porque cada objeto es inmutable y tiene un unico SHA1, asi que git nunca
+se confundira , solo puede copiar los objetos faltantes de un repositorio a otro .
+
+git tambien debe tener las ramas sincronizadas en los distintos clones , aca es donde las cosas se 
+ponen dificiles , con git push enviamos al control remoto y actualiza los commits los objetos en nuestras
+sucursales remotas para alinearlas con el estado del origen actual .
+
+LA TAREA DE TIRAR 
+
+que pasa cuando hay otros repositorios que empujan al origen , por lo que el estado del origen 
+podria cambiar en cualquier momento , ahora no podemos escribir los cambios en el control remto 
+tambien debemos leer los cambios desde el control remoto , las cosas se ponen un poco complicadas
+aqui .
+
+Cuando clonamos nuestro repositorio obtenemos los mismo objetos en nuestro cliente local 
+y aqui estan las ramas master ahora digamos que agregamos un commit y empujamos master "movemos master"
+git copia nuestro nuevo compromiso y los objetos asociados al origin control remoto y luego actualiza
+la rama principal del control remoto para que apunte al nuevo compromiso , y tambien refleja el cambio 
+en las ramas de origen master al actualizar local .
+
+en este caso haremos otro caso en el que pasaria lo siguiente , en local añadimos un commit automaticamente
+se mueve la rama a ese commit empuja, pero esta vez en origin alguien mas ha cambiado el control remoto creando otro compromiso 
+enviandolo desde otro lugar, tenemos un conflicto aqui , tenemos dos historias diferentes que ncesitan ser reconciliadas
+en este caso tenemos dos opciones una en caso muyespecial seria forzar un empuje podemos hacerlo con el interruptor de 
+linea y el comando push  git push -f que significa fuerza ,esto significa que estamos obligando al control remoto
+a tomar nuestro nuevo objeto y cambiar su historia en origin para que coincida con nuestro historial local 
+
+pero forzar un empuje no es buena idea ya que trae confusion , debemos solucionar en nuestra propia maquina
+antes de empujar para hacer esto necesitmos los datos del control remoto del origin , hay un comando para hacer eso y es:
+-git fetch obtenemos los nuevos objetos desde el control remoto y la posicion actual de las sucursales remotas
+
+ahora que tenemos la nueva confirmacion y los objetivos relacionados ,podremos cambiar nuestros 
+cambios locales con el historial remoto hicimos una busqueda, ahora haremos una fusion , el punto 
+importante es que no estamos reescribiendo la historia , ya que estamos añadiendo los nuevos objetos 
+llevando cosas nuevas al control remoto origin . 
+
+esto lo hacemos la mayor parte del tiempo , obtienes los cambios desde el control remoto , los 
+combinamos en nuestro repositorio y da un resultado, esta secuencia de git fetch con git merge da un 
+comando que hace ambas cosas y es "git pull"
+
+REBASE REVISITADO
+
+Hay una cosa mas importante que decir sobre este proceso de empujar y tirar y tiene que ver con 
+la rebasacion , tenemos un repositorio clonado con dos ramas y ambas ramas estan tanto en origin  como en local 
+al modificar un comit y rebasarlo nos va unir con la otra rama pero va hacer diferente a la copia, ya que se ha modificado
+en origin no podremos simplemente empujar porque tendremos diferentes historias tanto en origin como en 
+local .
+
+podremos arrglarlo facilmente por ejemplo haciendo un empuje de fuerza y tendremos tanto en origin como en lacal lo mismo
+sin embargo las cosas se descomponen cuando introducimos a otor usuario , y ese otro usuario esta 
+trabajando en local modifico una objeto de una rama , asi que tendra un conflcito que resolver
+cuando se sincronice con origin , hay muchas posiblidades de que despues de resolver el conflicto 
+termine con un historial confuso .
+
+como regla general nunca modifiques cosas que sse hayan compartidos con otros repositorios esta bien reajustar
+las confirmaciones que aun no se han compartido en general , pero es facil reajustar las confirmaciones 
+compartidar por error y luego esperar algunos problemas .
+
+VOLVIENDOSE SOCIAL 
+
+Vale la pena tomarse unos minutos para analizar dos caracteristicas relacionadas con la distribucion 
+que no son caracteristicas de git y es que son caracteristicas de Github , imagienemos que hay un 
+proyecto e github en el cual queremos contribuir y pertenece a x usuario , podriamos simplemente 
+clonar este repositorio , pero se podria quedar guardado en nuestra maquina local .
+
+lo que podemos hacer desde la interfaz web de Github es crear nuestra propia copia de proyecto de git hub
+esto se llama un "fork" tenedor esto es como un clon pero remoto dentro de github, y podremos clonarlo en nuestra
+maquina virtual aqui se crea el control remoto que apunta a el origin , pero si queremos agregar
+otro control remoto que apunte al repositorio original, esto es algo que debemos hacer nosotro mismos.
+
+esto se llama un flujo ascendente remoto , ahora tenemos nuestro proyecto local en multiples 
+controles remotos , podremos trabajar en ellos y los cambias se iran a origin .
+
+si hay cambios en sentido ascendente que vienen del repositorio original , podremos incluirlos en 
+nuestro proyecto local , para que nuesrtos cambios esten en el repositorio origial  cdebemos envair un mensaje
+a los titulares del proyecto esto es una solicitud de extraccion , esto es una caracteristica de la red 
+social 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ proyectoproductivovirtual@misena.edu.co
+
+
+ Suplir la necesidad de tener mas tiempo con sus seres queridos a la hora de hacer compras, facilitandole  desde cualquier lugar que se encuentre  poder realizar la compra por medio de diferentes formas de pago,  sin necesidad de trasladarse evitandole perdida de tiempo, gastos economicos y agotamiento fisico . Llevándole el producto a la puerta de su residencia, tambien por medio de la pagina web  detalladamente podrá observar el estado en que se encuentra la orden. y tendra
+ comunicacion constante con el repartidor.       
+
+ Pagina web sostenida por medio de un entorno rápido sin necesidad de descargar una aplicación   , con el menor gasto posible en requisitos de navegación tanto redes 2g, 3g, y 4g,  se puede abrir desde un computador, hasta cualquier tipo de celular smartphone ,  su interfaz grafica es rapida y dinamica , permitiendole al usuario interactuar con un entorno amigable , escogiendo lugares cercanos a su lugar de  residencia para poder ordenar fácil y rápido .  En pocos minutos .llegandole el pedido a su residencia monitoreandolo por medio de gps, desde el momento que se toma la orden hasta cuando se entrega. 
+
+ ........................................
+
+ Beneficio web y desarrollo personalizado, mejorando la productivad en las ventas en todo tipo de  tiendas, abarrotes , supermercados en el municipio de cogua cundinamarca.  
+ ........................................
+
+ Suplir la necesidad de tener mas tiempo con sus seres queridos a la hora de hacer compras, facilitándole desde cualquier lugar que se encuentre  poder realizar la compra por medio de diferentes formas de pago,  sin necesidad de trasladarse evitándole perdida de tiempo, gastos económicos y agotamiento físico . Llevándole el producto a la puerta de su residencia, también por medio de la pagina web  detalladamente podrá observar el estado en que se encuentra la orden. y tendrá  comunicación constante con el repartidor. 
+
+ ...........................................
+ Pagina Web para tiendas , Pagina Web para supermercados, Pagina Web para abarrotes. 
+ ............................................
+
+ Pagina web sostenida por medio de un entorno rápido sin necesidad de descargar una aplicación   , con el menor gasto posible en requisitos de navegación tanto redes 2g, 3g, y 4g,  se puede abrir desde cualquier computador y, tipo de celular smartphone ,  su interfaz grafica es rapida y dinamica , permitiendole al usuario interactuar con un entorno amigable , escogiendo lugares cercanos a su lugar de  residencia para poder ordenar fácil y rápido .  En pocos minutos .llegandole el pedido a su residencia monitoreandolo por medio de gps, desde el momento que se toma la orden hasta cuando se entrega.
+
+ .............................................
+
+ Esta pagina web esta enfocada a perfiles entre jóvenes de 13 años hasta  adultos mayores de 55 años , personas residentes del municipio de cogua ,cundinamarca ,  estratos socio económico 3,4,5 y 6  . Ya que por ser un municipio con diferentes veredas donde se esta alejado entre sectores y es largo el trayecto de un lado a otro. poder llegar a familias, jóvenes y adultos mayores por medio de mensajería a domicilio . con un promedio en ventas desde 1/2 salario mínimo en adelante, se manejan medios de pagos en efectivo  y electrónicos.  
+
+ .............................................
