@@ -12,7 +12,7 @@ basica detras de git
 
 CONOCE A SHA1
 
-Cual quier secuencia de bytes puede ser un valor , se puede dar un valor a git y calculara la 
+Cualquier secuencia de bytes puede ser un valor , se puede dar un valor a git y calculara la 
 clave para ellos un has , git calcula los hashes con algoritmos SHA1, cada pieza de contenido
 tiene su propio SHA1 Ejemplo 
 

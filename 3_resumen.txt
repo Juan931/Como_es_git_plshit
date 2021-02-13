@@ -1,0 +1,238 @@
+    TRABAJANDO CON SUCURSALES DE GIT "RAMAS "
+
+    Aveces las ramas , parecen algo complicadas  ,pero los comando nos pueden 
+    ayudar a facilitar nuestro dia tanto el porque como el modo de optener sucursales "Ramas"
+    para podernos sentirnos comodos con esta increible caracteristica , como parte de nuestro 
+    trabajo .
+
+    la realidad es que la mayoria de los sistemas son grandes y complejos y requiere de varios equipos 
+    de desarrollo para crear y mantener todo el codigo necesario , para soportar estos sistemas , veremos como 
+    ramificando puede hacer nuestra vida mas facil .
+
+    el camino de uy oops Path 
+
+    debemos hacer algo mas en master antes de poder terminar , com guardamos el trabajo y volvemos a el mas trasladarse
+    podemos crear una rama para confirmar todos los cambios existentes , luego podremos continuar en esta
+    rama ahora oh mas tarde , y si necesitamos hacer algo mas en el maestro cuando volvamos a cambiar estara limpio.
+
+    si estamos en master y tenemos algunos cambios podrian ser archivos que se hayan modificado o archivos que se hayan 
+    agregado , podemos crear una rama y cambiar a esa rama con la opcion " checkout -b nombre de la rama"
+    despues debemos organizar los cambios para la confirmacion y confirmarlos en la rama de solucion rapida ,
+    ahora cuando cambiemos a master no se vera ninguno de los nuevos cambios .
+
+    cuando tenemos cambios que estan en rojo en la rama master los podremos confirmar de la siguiente manera para no guardarlos en master,
+    podremos crear una nueva rama  y agregar todos estos cambios en esta nueva rama ,luego cuando se vuelva a la rama
+    master ,todo sera como era antes 
+
+    PASAR DE UNA RAMA A otra
+
+    Moverse de una rama a otra , git tiene varias sintaxis para hacer lo mismo , para ver las ramas que tenemos 
+    podemos hacerlo con el comando "git branch" .
+
+    Si estamos trabajando y nos damos cuenta de que lo que estamos haciendo no esta bien, como podremos volver 
+    a un punto de partida , eliminarlo y comenzar de nuevo , pero nos damos cuenta de que tenemos la gran parte 
+    de la solucion y solo necesita un par de ajustes para estar completo , si elimino todo no puedo recuperarlo 
+    esto es algo donde la ramificacion nos puede ayudar, se puede crear una nueva rama cuando se empiece el trabajo.
+
+    Tambien se puede crear una rama cuado se comienza algo de lo que no se esta muy seguro , tambien se puede usar una
+    rama para preservar lo que se cree que es la ruta , si se determina que se necesita un codigo de un intento anteriormente
+    estara alli en la rama .
+
+    Lo que se hace es lo siguiente , tenemos los archivos en master , despues podremos crear otra rama
+    desde master los agregamos commit , luego vamos a otra rama desde master creamos otra rama dentro de esa rama podremos abrir el archivo 
+    que tenemos y volver a escribirlo   . agregamos y commit y volvemos a la pirmera rama y tendremos la base de la informacion.
+
+    las ramas tambien nos pueden ayudar cuando nos encontramos atascados esperando algo , supongamos que estamos trabajando en un ticket
+    per esta bloqueado por un requisito incompleto , podremos crear una segunda sucursal en master y seguir con el proyecto mientras obtenemos la 
+    informacion que necesitamos del primer ticket , regresamos y continuamos con el trabajo , esto nos dara una base limpia desde nuestro codigo , cuando 
+    volvamos a la primera sucursal los objetos se actualizan .
+
+    CAMBIO DE NOMBRE Y ELIMINCAION DE RAMAS 
+
+    Supongamos que no nos gusta el nombre de una rama ,podremos cambiarle el nombre de la siguiente manera
+
+    -git brach -m seguido el nombre actual despues elnombre que le queremos dar.
+
+    Tambie podremos eliminar ramas de lasiguiente manera :
+
+    -get branch -d nombre de la rama
+    -git branch -D nombre de la rama: esta opciones es cuando no hemos guardado las confirmaciones pero aun asi queremos eliminarla
+
+    COMPARACION Y FUSION DE SUCURSALES 
+
+    si descubri una solucion en rama como puedo volver a ponerla en master , y lo podemos hacer fusionandolas , si no se ha hecho 
+    una fusion en master , git puede hacer una conbinacion de avance rapido , aquie es donde la referencia para master simplemente se 
+    mueve hacia adelante hasta el ultimo compromiso de la rama . veamoslo de la siguiente manera
+
+    tuviste 30 minutos y tuviste que irte mientas estabas fuera pudiste usar el telefono otros 15 minutos par seguir viendolo desde donde lo 
+    dejaste asi que tienes 45 minutos de la pelicula , cuando llegue a casa el televisor avanzara como si lo estuviera viendo todo el tiempo
+
+    Las fusiones de avance son iguales porque no hubo actividad conflictiva y maestra despues de que se creo la rama , como si estuvieramos 
+    trabajando alli todo el tiempo, todo sucede en una secuencia lineal " target y source" son ejemplos de fusion y esto es el significado de estos terminos 
+    la rama master es la fuente de destino a la sucursal que tiene los cambios que se desean , en ese orden de ideas la sucursal la "rama " es la fuente 
+
+    cuando se fusiona con master lo que hay en la rama pasa a master .
+
+    -git merge con la rama que se desea fusionar.
+
+    Si queremos ver que va a pasar primero antes de fusionar una rama podemos hacer lo siguiente, podremos hacer lo siguiente para comparar las ramas 
+    la sintaxis es 
+
+    - git diff y el nombre de las dos ramas que se desean comparar .
+
+    REORGANIZAR CON REBASES 
+
+    Aveces tenemos un desastre , podremos crear un punto de control para empezar de nuevo , git rebaes nos da mas claridad de lo 
+    que se esta haciendo , pero hay que saber cuando no utilizar rebases , no utilizar rebase en una sucursal publica ya que se puede 
+    causar confusion incluso se puede    debemos limpiar el historial local antes de compartir una sucursal , hacer cambios 
+    en una rama sin realizar emerge .
+
+    podemos usar rebase y supongamos que tenemos tres confirmaciones, lo que podemos hacer es fucionarlos y dejar solo uno , vaemos como funciona:
+
+    -git log --oneline , 
+    -git merge-base nombre de las ramas
+    -git rebase -i codigo de la rama le dira donde comenzar a mejorar la base de datos , podremos ver tres confirmaciones escogemos las dos que queremos
+    fusionar y al principio agregaremos squash y quitamos pick .
+
+    DEMOSTRACION DE REBASE 
+
+    aplastar varias confirmaciones en una sola    
+
+    USANDO CHERRY PICK 
+
+    Git cherry-pick , crea una copia de la confirmacion  , pero con un nuevo padre en la rama un caso comun para la seleccion de Cherry pick
+    es una correccion de errores que se aplica a multiples versiones de un producto ,puede realizar la confirmacion para corregir el error 
+    en una rama , luego seleccionar esa confirmacion en las otras ramas para aplicar la correccion . Esto pasa cuando se tiene diferentes versiones 
+    en git pero al momento de estar en la ultima pasa que hay un erro y se soluciona, pero la idea es solucionarlo tambien en las anteriores versiones
+
+    DEMOSTRACION DE CHERRY  PICK
+
+    estando en master y teniendo un archivo creado , vamos a crear otra rama  
+
+
+    USAR SUCURSALES DE GIT CON SU EQUIPO 
+
+    Configuracion de Controles Remoto 
+
+    como podemos usr sucursales para trabajar mas facil con nuestro equipo , se cubrira Remoto, pull, push , diff.
+
+    un control remoto es simplemente una ubicacion donde se aloja una version del proyecto un control remoto tiene una url que se usar
+    para crear una copia local .
+
+    origin obtiene nombre del servidor que clono desde el origen .
+
+    -git remote -v  sirve para ver listas que se han establecido remotamente . veamos como podemos establecer un control remoto 
+    usaremos gitHub, tenemos un repositorio y lo clonamos , ahora iremos al local donde queremos que los repositorios recidan ejecutamos
+    el comando "git clone segido de la url" y veremos que se ha descargado el proyecto , podremos ver el origen que es la url " git remote -v"
+
+    USOS DE CONTROL REMOTO 
+
+    Lo bueno de git es que cada desarrollador tiene su propia copia de repositorio donde se viene trabajando , esto da la opcion de elegir 
+    y el control cuando integrar los cambios de todos los demas y compartir lo que han estado trabajando en equipo , copartir codigo hacia 
+    y desde el control remoto se logra con unos comando simples , para recibir cambios desde el control remoto que se puede usar "get fech", " git pull"
+    descargar cualquier informacion del control remoto , que no este en la copia local , luego se puede evaluar y decir que se quiere .
+
+    git pull es una convinacion de busqueda y fusion , por lo que descargara la informacion e iniciara merge en la sucursal local , para compartir sus 
+    cambios de copia del repositorio , despues podemos usar git push para enviar al remoto .
+
+    USO DE  CONTROL REMOTO CON SUCURSALES
+
+    Podemos utilizar el control remoto para nuestras sucursales ,hemos trabajado mucho en local pero no estamos listos para 
+    susionarnos , pero queremos tener una copia remota para poder continuar el trabajo en otra maquina con el comando "push" podemos enviar
+    una copia de la sucursal en los repositorios remotos , y luego lo podremos extraer conel comando "pull" desde otra maquina local 
+
+    Pasemos a empujar una rama a remoto que acceder a una ubicacion
+
+    tenemos un archivo que esta en una rama , ya lo tenemos confirmado y commit , nos tenemos que ir , pero queremos seguir 
+    trabajando en el desde el otro lugar donde nos vamos a encontrar , lo que aremos sera empujar la caracteristica de la rama al control remoto 
+    para ello lo hacemos de la siguiente manera "git push -u  origin nombre de la rama ", veremos la caracteristica  "git ls-remote" 
+
+    phechos un vistaso a la funsion de origin " git branch -a" nos mostrara las que estan ocultas y luego " git checkout --track origen/nombre de la rama
+
+    podremos ver que tenemos nuestra rama que creamos en la otra maquina "cat nombre de la rama/nombre del archivo 
+
+    ENTENDIENDO GIT DIFF
+
+    Nos ayud a responder preguntas que tengamos sobre el codigo, lo que ha cambiado y esta organizado para un commit
+    -git diff --cached (git commit): lo que se organiza para commit que es diferente del ultimo commit o en otras palabras lo 
+    que se compomete si se ejecutara 
+    -git diff HEAD  (Git commit -a) define lo que ha cambiado desde el ultimo compromiso en otras palabras que pasaria si se comprometieran 
+
+    estos tres comandos me pueden ayudar a decidir que agregar al compromiso y verificar dos cosas antes de comprometerme
+
+    estos son los que toman un disparo de confirmacion 
+
+    -git diff <commit> cual es la diferencia entre el compromiso especificado y el directorio de trabajo actual 
+    -git diff --cached <commit> cual es la diferencia entre el especificado , commit y lo que se organiza 
+    -git diff <commit> <commit> cual es la diferencia entre estos dos commits , estos comandos nos pueden ayudar , cuando intentamos comparar 
+    elementos especificos , que ya se han confirmado 
+
+    Estos siguientes toman nombres de ramas como parametros 
+
+    git diff feature master : cual es la diferencia entre las puntas de las dos ramas 
+    git diff feature...master:obtenga la funcion de master, que ha cambiado en el maestro desde que se 
+    inicio la funcion .
+    git diff feature master nombre de archivo: Obtener la funcion diff master presentada en el texto , cual es la diferencia entre el 
+    texto del punto de archivo en la rama de caracteristica y el maestro , estos comando pueden ser utiles cuando se prepara para fusionar una
+    rama o para ver lo que ha estado sucediendo desde que se bifuro de otra rama .
+
+    diff --git a/nombre de archivo b/nombre de archivo : la salida esta en un formato determinado, la primera linea muestra los nombres de los archivos 
+    que se comparan en las etiquetas diff git A y B y lo que hace git es mostrar el hash del archivo A y B 
+    --- a/archiv de texto 
+    +++ a/archiv de texto  estas dos lineas muestran los marcados de archivos que se utililzan en el archivo de diferencia , --- seran guienes y archivos seran +++ 
+    deacuerdo a esto es para ver el tipo del documento . 
+
+    @@ -3,6 +3,7 @@ esta parte probablemente es la mas confusa cuando se ve por primera vez, 
+    los simbolose @ de doble son solo marcadores para el encabezado del fragmento el diff puede contener multiples fragmentos 
+    cada uno con su propio en cabezado . el  primer par de numeros -3,6 con un guin indica que se muestra 6 lineas de archivo A 
+    comenzando con la linea 3 de ese archivo , el marcador de archivo , para el archivo A es el - guión 
+    +3,7 el siguiente par de numeros con un signo mas indica que se muestan 7 lineas desde el archivo B comenzando con la linea tres de ese archivo 
+    el marcador de archivo para el archivo B  es el signo + , las lineas que no tienen un - guión mas delante o + mas , ellas son las mismas en amabos 
+    archivos .
+
+    Ahora la mayoria de las ideas han incorporado soporte para diff , para que las diferencias se muestren graficamente con colores y comparaciones lado a lado 
+    y estas herramientas pueden ser muy utiles al tratar de determinar las diferencias en su base de codigo 
+
+    Veamos algunos ejemplos de diff en accion .
+
+    USANDO GIT DIFF 
+
+    Tengo un archivo llamado Pddiff.txt le hago un cambio al archivo y voy a la terminal  
+    miramos con el comando git diff , y me va aparecer el cambio que se hizo , despues los agregamos ydespues los confirmamos 
+    despues vuelvo y agrego mas informacion al documento   .
+
+    para ver todos los cambios tanto en escena como sin escena usamos "git diff HEAD ",
+
+    podemos tambien cambiar alguno delos nombres y agregar otros.
+
+    puedo crear otro archivo y ogranizar la informacion , y mirar con el comando git diff --cached ,y nos mostrara el orden , 
+    git diff -w : lo que hace git es ignorar los cambios que se han hecho 
+
+    supongamos que queremos saber cuantos colores habian en el archivo original y cuantos tenemos ahora entonces con el comando 
+    git diff y numero del comit lo podremos hacer , si lo queremos ver mas clara mente git show y el nombre de la rama , nos mostrara las lineas del archivo 
+    
+    supongamos que tenemos un nuevo requisito para eliminar todos los nombres de colores originales y remplazarlos con otra cosa 
+
+
+    .GIT IGNORE
+
+    git ignore se utiliza para para que los archivos que esten en una carpeta se ignoren , el archivo git gnore usa una expresion 
+    regular como la sintaxis para especificar patrones de archivos y directorios para ignorar estos primeros 
+    por lo general estan archivos importantes como leer el proyecto 
+
+    USANDO PULL REQUEST 
+
+    Cuando se crea una rama y se hace un trabajo en ella que se esta lista para pusionar con master , se puede 
+    solicitar una solicitud de extraccion para facilitar el proceso de revision y prueba , se puede empujar la rama a remoto cuando esta lista 
+    luego se abre una solicitud de post, los repositorios que alojan en remoto generalmente tienen funcionalidad para sus solicitudes de extraccion en la web 
+    se pueden ver cosas como ver las configuraciones , y discutir los cambios en el equipo , es posible que se tenga que hacer algunas revisiones antes de que la rama se pueda
+    fusionar , no hay problema simplemente se hace los cambios en la sucursal local , luego se empuja el commit a control remoto y luego se agregara automaticamente a la solicitud 
+    del grupo , despues de que la sollicitud de extraccion haya sido aprobada podria fusionarse co la sucursal maestra y eliminarse la rama , vamos a implementar una fusion y usar una 
+    solicitud de extraccion para recopilar comentarios luego fusionar la rama con maestro 
+
+    crearemos una rama para implementar el codigo de la utilidad , luego crearemos una solicitud de polo para fusionarla en master 
+
+    git push -u origin utility 
+
+    atravez de la pestaña de solicitud de extraccion ahora otros miembros del equipo pueden revisar y hacer comentarios sobre los cambios 
+
